@@ -1,0 +1,5 @@
+.button-container {
+  height: 34px;
+  cursor: pointer;
+  min-width: 60px;
+}
