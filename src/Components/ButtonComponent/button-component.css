@@ -2,4 +2,11 @@
   height: 34px;
   cursor: pointer;
   min-width: 60px;
+  transition: 0.3s ease;
+}
+
+.button-blue {
+  background-color: blueviolet;
+  color: white;
+  border-color: blueviolet;
 }

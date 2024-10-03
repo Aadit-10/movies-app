@@ -27,9 +27,14 @@
 
 .movie-card-group {
   display: flex;
-  justify-content: flex-start;
-  /* background-color: blue; */
+  justify-content: center;
+  align-items: center;
   padding-top: 30px;
+  padding-left: 10px;
   width: 100%;
-  /* align-items: center; */
+  gap: 70px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }

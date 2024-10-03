@@ -5,11 +5,18 @@ interface ButtonComponentProps {
 }
 
 const ButtonComponent: React.FC<ButtonComponentProps> = ({ text }) => {
-  const [activeButton, setActiveButton] = useState<string>("All");
-
+  const [activeButton, setActiveButton] = useState<boolean>(false);
+  const handleButtonClick = () => {
+    setActiveButton(!activeButton);
+  };
   return (
     //<div className="button-container">
-    <button className="button-container">{text}</button>
+    <button
+      className={`button-container ${activeButton && "button-blue"}`}
+      onClick={handleButtonClick}
+    >
+      {text}
+    </button>
     //</div>
   );
 };

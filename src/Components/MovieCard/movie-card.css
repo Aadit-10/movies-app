@@ -1,25 +1,41 @@
 .movie-card-container {
-  display: flex;
-  /* justify-content: flex-start; */
-  /* flex-direction: column; */
-  /* width: 100%; */
-  margin-left: 30px;
-  /* margin-top: 60px;
-  padding-left: 150px; */
+  /* display: flex; */
 }
-.movie-card-img {
+.movie-card-image {
   background-color: brown;
   height: 370px;
   width: 263px;
   border-radius: 7px;
+  position: relative;
+  display: inline-block;
 }
 .movie-card-image img {
-  width: 263px;
-  height: 370px;
+  width: 100%;
+  height: auto;
   border-radius: 7px;
-
-  object-fit: cover;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
 }
+
+.movie-card-heart {
+  position: absolute;
+  bottom: -5px;
+  left: 10px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  fill: white;
+  transition: fill 0.3s ease;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+.fav-active {
+  fill: red;
+}
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  cursor: pointer;
+}
+
 .movie-card-text {
   margin-top: 10px;
 }
@@ -28,4 +44,12 @@
   display: flex;
   justify-content: space-between;
   margin-top: 5px;
+}
+.heart-icon {
+  height: 13px;
+  width: 13px;
+}
+.movie-card-image:hover .movie-card-heart {
+  transform: scale(1.2); /* Slightly increase the size on hover */
+  transition: transform 0.3s ease; /* Smooth transition */
 }

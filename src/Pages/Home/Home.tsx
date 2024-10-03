@@ -35,13 +35,14 @@ const Home: React.FC = () => {
       const response = await axios.request(options);
       const Genres = response.data.genres;
       setAllGenres(Genres);
-      // console.log("Inside Fn", allGenres);
+      // console.log("allGenres", allGenres);
       // return allGenres;
     } catch (error) {
       console.error(error);
       return [];
     }
   };
+  console.log("allGenres", allGenres);
 
   // Getting all details of movies
   const getMovieDetails = async () => {
@@ -71,12 +72,8 @@ const Home: React.FC = () => {
     }
   };
 
-  // const th: any = allMovies[2];
-  // console.log("th", th);
-
   // Getting the essential details for showing in movie card
-
-  const settingMovieCardDetails = async () => {
+  const settingMovieCardDetails = () => {
     console.log("Data", allMovies);
 
     allMovies.forEach((movie: any) => {
@@ -109,6 +106,7 @@ const Home: React.FC = () => {
           ))}
         </div>
         <div className="movie-card-group">
+          <span className="material-symbols-outlined">arrow_back</span>
           {displayMovies.map((movie: any) => (
             <MovieCard
               title={movie.title}
@@ -117,7 +115,7 @@ const Home: React.FC = () => {
               poster={movie.poster}
             />
           ))}
-
+          <span className="material-symbols-outlined">arrow_forward</span>
           {/* {allMovies.map((movie: any) => console.log("helelo"))} */}
         </div>
       </div>
