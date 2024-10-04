@@ -6,6 +6,7 @@ interface ButtonComponentProps {
   settingMovieCardDetails: any;
   activeButton: any;
   setActiveButton: any;
+  setCurrentPage: any;
 }
 
 const ButtonComponent: React.FC<ButtonComponentProps> = ({
@@ -14,11 +15,13 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({
   settingMovieCardDetails,
   activeButton,
   setActiveButton,
+  setCurrentPage,
 }) => {
   // const [activeButton, setActiveButton] = useState<any>("All");
   const handleButtonClick = () => {
     setActiveButton(text);
     settingMovieCardDetails(genreId);
+    setCurrentPage(1);
   };
   return (
     //<div className="button-container">

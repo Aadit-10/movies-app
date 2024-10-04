@@ -17,7 +17,13 @@
   justify-content: space-between;
   width: 90%;
 }
+.view-all-text {
+  cursor: pointer;
+}
 
+.view-all-text:hover {
+  color: darkorchid;
+}
 .button-group {
   display: flex;
   justify-content: space-around;
@@ -29,17 +35,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 1500px;
+  width: 100%;
   gap: 70px;
+}
+.no-movie-message {
+  font-size: 20px;
 }
 .movie-card-group {
   display: flex;
-  justify-content: flex-start;
-  gap: 47px;
+  justify-content: space-evenly;
+  gap: 55px;
   align-items: center;
   width: 100%;
 }
 
+.disabled {
+  opacity: 0.5;
+  pointer-events: none; /* Disables clicking */
+}
 .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }

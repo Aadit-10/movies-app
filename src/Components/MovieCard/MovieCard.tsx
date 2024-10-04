@@ -3,14 +3,16 @@ import "./movie-card.css";
 import { ReactComponent as LikeIcon } from "../../Icons/Like.svg";
 import HeartIcon from "../../Icons/red_love.png";
 
+interface MovieCardProps {
+  title: string;
+  language: string;
+  vote: number;
+  poster: string; // poster path without base URL (e.g., "/1E5baAaEse26fej7uHcjOgEE2t2.jpg")
+}
+
 const MovieCard: React.FC<any> = ({ title, language, vote, poster }) => {
   const [fav, setFav] = useState<any>(false);
-  interface MovieCardProps {
-    title: string;
-    language: string;
-    vote: number;
-    poster: string; // poster path without base URL (e.g., "/1E5baAaEse26fej7uHcjOgEE2t2.jpg")
-  }
+
   const changeHeartColor = () => {
     setFav(!fav);
   };
@@ -29,11 +31,13 @@ const MovieCard: React.FC<any> = ({ title, language, vote, poster }) => {
             onClick={changeHeartColor}
           />
         </div>
-        <div className="movie-card-text">{title}</div>
+        <div className="movie-card-text-holder">
+          <div>{title}</div>
+        </div>
         <div className="movie-card-language-and-like">
           <div className="movie-card-language">{language}</div>
           <div className="movie-card-like">
-            <img src={HeartIcon} alt="Heart Icon " className="heart-icon" />{" "}
+            {/* <img src={HeartIcon} alt="Heart Icon " className="heart-icon" />{" "} */}
             {vote}
           </div>
         </div>

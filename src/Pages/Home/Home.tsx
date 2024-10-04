@@ -10,6 +10,7 @@ const Home: React.FC = () => {
   const [allGenres, setAllGenres] = useState<any>([]);
   const [allMovies, setAllMovies] = useState<any>([]);
   const [neededMovieDetails, setNeededMovieDetails] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState<any>(1);
 
   useEffect(() => {
     getGenreDetails();
@@ -76,7 +77,6 @@ const Home: React.FC = () => {
   const settingMovieCardDetails = (genreId = "") => {
     // Clear the previous movie details before adding new ones
     setNeededMovieDetails([]);
-
     let matchingMoviesFound = false; // Flag to check if any movie matches the genreId
 
     allMovies.forEach((movie: any) => {
@@ -108,15 +108,28 @@ const Home: React.FC = () => {
         }
       }
     });
+    // pagination(4, neededMovieDetails);
 
     // If no matching movies are found, log a message
     if (genreId !== "" && !matchingMoviesFound) {
+      // return false;
       console.log("No movie satisfies the condition for the given genre ID.");
     }
   };
+  // const noOfMoviesPerPage: any = 4;
 
-  const displayMovies = neededMovieDetails.slice(0, 10);
-
+  const pagination = (noOfItemsPerPage: any, data: any) => {
+    const stopIndex = noOfItemsPerPage * currentPage;
+    const startIndex = stopIndex - noOfItemsPerPage;
+    const dataToShow = data.slice(startIndex, stopIndex);
+    console.log("movies", dataToShow);
+    return dataToShow;
+  };
+  // pagination(4, allMovies);
+  const dataToShow = pagination(4, neededMovieDetails);
+  const totalMovies = allMovies.length;
+  const totalPages = Math.ceil(totalMovies / 4);
+  const displayMovies = neededMovieDetails.slice(0, 4);
   // console.log("neededMovieDetails", neededMovieDetails);
 
   return (
@@ -124,7 +137,15 @@ const Home: React.FC = () => {
       <div className="home">
         <div className="now-show-and-view-all">
           <p> Now Showing </p>
-          <p> View all</p>
+          <p
+            className="view-all-text"
+            onClick={() => {
+              settingMovieCardDetails();
+              setActiveButton("All");
+            }}
+          >
+            View all
+          </p>
         </div>
 
         <div className="button-group">
@@ -134,7 +155,9 @@ const Home: React.FC = () => {
             settingMovieCardDetails={settingMovieCardDetails}
             activeButton={activeButton}
             setActiveButton={setActiveButton}
+            setCurrentPage={setCurrentPage}
           />
+
           {allGenres.map((genre: any) => (
             <ButtonComponent
               text={genre.name}
@@ -142,22 +165,54 @@ const Home: React.FC = () => {
               settingMovieCardDetails={settingMovieCardDetails}
               activeButton={activeButton}
               setActiveButton={setActiveButton}
+              setCurrentPage={setCurrentPage}
             />
           ))}
         </div>
         <div className="movie-card-group-container">
-          <div className="movie-card-group">
-            <span className="material-symbols-outlined">arrow_back</span>
-            {neededMovieDetails.map((movie: any) => (
-              <MovieCard
-                title={movie.title}
-                language={movie.language}
-                vote={movie.vote}
-                poster={movie.poster}
-              />
-            ))}
-            <span className="material-symbols-outlined">arrow_forward</span>
-          </div>
+          {dataToShow.length === 0 ? (
+            <div className="no-movie-message">
+              No Movie/Show found in this Genre
+            </div>
+          ) : (
+            <div className="movie-card-group">
+              <span
+                className={`material-symbols-outlined ${
+                  currentPage === 1 ? "disabled" : ""
+                }`}
+                onClick={() => {
+                  if (currentPage > 1) {
+                    setCurrentPage((prevPage: any) => prevPage - 1);
+                  }
+                }}
+              >
+                arrow_back
+              </span>
+
+              {dataToShow.map((movie: any) => (
+                <MovieCard
+                  title={movie.title}
+                  language={movie.language}
+                  vote={movie.vote}
+                  poster={movie.poster}
+                />
+              ))}
+
+              <span
+                className={`material-symbols-outlined ${
+                  currentPage === totalPages ? "disabled" : ""
+                }`}
+                onClick={() => {
+                  if (currentPage < totalPages) {
+                    setCurrentPage((prevPage: any) => prevPage + 1);
+                  }
+                }}
+              >
+                arrow_forward
+              </span>
+            </div>
+          )}
+
           {/* {allMovies.map((movie: any) => console.log("helelo"))} */}
         </div>
       </div>
