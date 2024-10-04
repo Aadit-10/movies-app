@@ -6,6 +6,7 @@ import MovieCard from "../../Components/MovieCard/MovieCard";
 
 const Home: React.FC = () => {
   // let allGenres: any = [];
+  const [activeButton, setActiveButton] = useState<any>("All");
   const [allGenres, setAllGenres] = useState<any>([]);
   const [allMovies, setAllMovies] = useState<any>([]);
   const [neededMovieDetails, setNeededMovieDetails] = useState<any[]>([]);
@@ -131,12 +132,16 @@ const Home: React.FC = () => {
             text={"All"}
             genreId={""}
             settingMovieCardDetails={settingMovieCardDetails}
+            activeButton={activeButton}
+            setActiveButton={setActiveButton}
           />
           {allGenres.map((genre: any) => (
             <ButtonComponent
               text={genre.name}
               genreId={genre.id}
               settingMovieCardDetails={settingMovieCardDetails}
+              activeButton={activeButton}
+              setActiveButton={setActiveButton}
             />
           ))}
         </div>

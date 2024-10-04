@@ -4,23 +4,29 @@ interface ButtonComponentProps {
   text: string;
   genreId: any;
   settingMovieCardDetails: any;
+  activeButton: any;
+  setActiveButton: any;
 }
 
 const ButtonComponent: React.FC<ButtonComponentProps> = ({
   text,
   genreId,
   settingMovieCardDetails,
+  activeButton,
+  setActiveButton,
 }) => {
-  const [activeButton, setActiveButton] = useState<boolean>(false);
+  // const [activeButton, setActiveButton] = useState<any>("All");
   const handleButtonClick = () => {
-    setActiveButton(!activeButton);
-    console.log(genreId);
+    setActiveButton(text);
     settingMovieCardDetails(genreId);
   };
   return (
     //<div className="button-container">
     <button
-      className={`button-container ${activeButton && "button-blue"}`}
+      name={text}
+      className={`button-container ${
+        activeButton === text ? "button-blue" : ""
+      }`}
       onClick={handleButtonClick}
     >
       {text}
