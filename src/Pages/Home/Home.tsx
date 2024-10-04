@@ -35,7 +35,6 @@ const Home: React.FC = () => {
       const response = await axios.request(options);
       const Genres = response.data.genres;
       setAllGenres(Genres);
-      // console.log("allGenres", allGenres);
       // return allGenres;
     } catch (error) {
       console.error(error);
@@ -73,22 +72,49 @@ const Home: React.FC = () => {
   };
 
   // Getting the essential details for showing in movie card
-  const settingMovieCardDetails = () => {
-    console.log("Data", allMovies);
+  const settingMovieCardDetails = (genreId = "") => {
+    // Clear the previous movie details before adding new ones
+    setNeededMovieDetails([]);
+
+    let matchingMoviesFound = false; // Flag to check if any movie matches the genreId
 
     allMovies.forEach((movie: any) => {
-      setNeededMovieDetails((prevDetails) => [
-        ...prevDetails,
-        {
-          title: movie?.title || "",
-          language: movie?.original_language || "",
-          vote: movie?.vote_average || "",
-          poster: movie?.poster_path || "",
-        },
-      ]);
+      if (genreId === "") {
+        // If no genreId is provided, store all movies
+        setNeededMovieDetails((prevDetails) => [
+          ...prevDetails,
+          {
+            title: movie?.title || "",
+            language: movie?.original_language || "",
+            vote: movie?.vote_average || "",
+            poster: movie?.poster_path || "",
+          },
+        ]);
+      } else {
+        // If genreId is provided, filter the movies by genreId
+        if (movie.genre_ids.includes(Number(genreId))) {
+          matchingMoviesFound = true; // Set flag to true if any movie matches
+
+          setNeededMovieDetails((prevDetails) => [
+            ...prevDetails,
+            {
+              title: movie?.title || "",
+              language: movie?.original_language || "",
+              vote: movie?.vote_average || "",
+              poster: movie?.poster_path || "",
+            },
+          ]);
+        }
+      }
     });
+
+    // If no matching movies are found, log a message
+    if (genreId !== "" && !matchingMoviesFound) {
+      console.log("No movie satisfies the condition for the given genre ID.");
+    }
   };
-  const displayMovies = neededMovieDetails.slice(0, 4);
+
+  const displayMovies = neededMovieDetails.slice(0, 10);
 
   // console.log("neededMovieDetails", neededMovieDetails);
 
@@ -101,21 +127,32 @@ const Home: React.FC = () => {
         </div>
 
         <div className="button-group">
+          <ButtonComponent
+            text={"All"}
+            genreId={""}
+            settingMovieCardDetails={settingMovieCardDetails}
+          />
           {allGenres.map((genre: any) => (
-            <ButtonComponent text={genre.name} />
-          ))}
-        </div>
-        <div className="movie-card-group">
-          <span className="material-symbols-outlined">arrow_back</span>
-          {displayMovies.map((movie: any) => (
-            <MovieCard
-              title={movie.title}
-              language={movie.language}
-              vote={movie.vote}
-              poster={movie.poster}
+            <ButtonComponent
+              text={genre.name}
+              genreId={genre.id}
+              settingMovieCardDetails={settingMovieCardDetails}
             />
           ))}
-          <span className="material-symbols-outlined">arrow_forward</span>
+        </div>
+        <div className="movie-card-group-container">
+          <div className="movie-card-group">
+            <span className="material-symbols-outlined">arrow_back</span>
+            {neededMovieDetails.map((movie: any) => (
+              <MovieCard
+                title={movie.title}
+                language={movie.language}
+                vote={movie.vote}
+                poster={movie.poster}
+              />
+            ))}
+            <span className="material-symbols-outlined">arrow_forward</span>
+          </div>
           {/* {allMovies.map((movie: any) => console.log("helelo"))} */}
         </div>
       </div>

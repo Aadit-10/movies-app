@@ -25,14 +25,19 @@
   margin: 20px 0;
 }
 
-.movie-card-group {
+.movie-card-group-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 30px;
-  padding-left: 10px;
-  width: 100%;
+  width: 1500px;
   gap: 70px;
+}
+.movie-card-group {
+  display: flex;
+  justify-content: flex-start;
+  gap: 47px;
+  align-items: center;
+  width: 100%;
 }
 
 .material-symbols-outlined {
