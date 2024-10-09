@@ -45,9 +45,12 @@
 
 .movie-card-container .movie-card-text-holder {
   margin-top: 10px;
-  cursor: pointer;
 }
-.movie-card-container .movie-card-text-holder:hover {
+.movie-card-container .inside-movie-card-text-holder {
+  cursor: pointer;
+  width: fit-content;
+}
+.movie-card-container .inside-movie-card-text-holder:hover {
   color: darkorchid;
 }
 
@@ -60,7 +63,8 @@
   height: 13px;
   width: 13px;
 }
-.movie-card-container .movie-card-image:hover .movie-card-heart {
+
+.movie-card-container .movie-card-heart:hover {
   transform: scale(1.2); /* Slightly increase the size on hover */
   transition: transform 0.3s ease; /* Smooth transition */
 }

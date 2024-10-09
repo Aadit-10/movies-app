@@ -11,10 +11,10 @@ const Home: React.FC = () => {
   const [allMovies, setAllMovies] = useState<any>([]);
   const [neededMovieDetails, setNeededMovieDetails] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<any>(1);
-
+  const [apiPage, setApiPage] = useState<any>(1);
   useEffect(() => {
     getGenreDetails();
-    getMovieDetails();
+    getMovieDetails(1);
   }, []);
 
   useEffect(() => {
@@ -43,10 +43,9 @@ const Home: React.FC = () => {
       return [];
     }
   };
-  console.log("allGenres", allGenres);
 
   // Getting all details of movies
-  const getMovieDetails = async () => {
+  const getMovieDetails = async (page: any = "") => {
     const options = {
       method: "GET",
       url: "https://api.themoviedb.org/3/discover/movie",
@@ -54,7 +53,7 @@ const Home: React.FC = () => {
         include_adult: "false",
         include_video: "false",
         language: "en-US",
-        page: "1",
+        page: page,
         sort_by: "popularity.desc",
       },
       headers: {
@@ -77,7 +76,6 @@ const Home: React.FC = () => {
   const settingMovieCardDetails = (genreId = "") => {
     // Clear the previous movie details before adding new ones
     setNeededMovieDetails([]);
-    let matchingMoviesFound = false; // Flag to check if any movie matches the genreId
 
     allMovies.forEach((movie: any) => {
       if (genreId === "") {
@@ -85,52 +83,91 @@ const Home: React.FC = () => {
         setNeededMovieDetails((prevDetails) => [
           ...prevDetails,
           {
+            id: movie?.id || "",
             title: movie?.title || "",
             language: movie?.original_language || "",
-            vote: movie?.vote_average || "",
+            vote_average: movie?.vote_average || "",
             poster: movie?.poster_path || "",
+
+            backdrop_path: movie?.backdrop_path || "",
+            genre_ids: [28, 35, 878],
+            overview: movie?.overview || "",
+            popularity: movie?.popularity || "",
+            release_date: movie?.release_date || "",
+            video: movie?.video || "",
+            vote_count: movie?.vote_count || "",
           },
         ]);
       } else {
         // If genreId is provided, filter the movies by genreId
         if (movie.genre_ids.includes(Number(genreId))) {
-          matchingMoviesFound = true; // Set flag to true if any movie matches
-
           setNeededMovieDetails((prevDetails) => [
             ...prevDetails,
             {
+              id: movie?.id || "",
               title: movie?.title || "",
               language: movie?.original_language || "",
-              vote: movie?.vote_average || "",
+              vote_average: movie?.vote_average || "",
               poster: movie?.poster_path || "",
+
+              backdrop_path: movie?.backdrop_path || "",
+              genre_ids: [28, 35, 878],
+              overview: movie?.overview || "",
+              popularity: movie?.popularity || "",
+              release_date: movie?.release_date || "",
+              video: movie?.video || "",
+              vote_count: movie?.vote_count || "",
             },
           ]);
         }
       }
     });
-    // pagination(4, neededMovieDetails);
-
-    // If no matching movies are found, log a message
-    if (genreId !== "" && !matchingMoviesFound) {
-      // return false;
-      console.log("No movie satisfies the condition for the given genre ID.");
-    }
   };
-  // const noOfMoviesPerPage: any = 4;
+  // console.log(currentPage);
 
   const pagination = (noOfItemsPerPage: any, data: any) => {
     const stopIndex = noOfItemsPerPage * currentPage;
     const startIndex = stopIndex - noOfItemsPerPage;
-    const dataToShow = data.slice(startIndex, stopIndex);
-    console.log("movies", dataToShow);
-    return dataToShow;
+    return data.slice(startIndex, stopIndex);
   };
-  // pagination(4, allMovies);
+
   const dataToShow = pagination(4, neededMovieDetails);
-  const totalMovies = allMovies.length;
-  const totalPages = Math.ceil(totalMovies / 4);
-  const displayMovies = neededMovieDetails.slice(0, 4);
+  const totalPages = Math.ceil(neededMovieDetails.length / 4);
   // console.log("neededMovieDetails", neededMovieDetails);
+
+  // if (currentPage === totalPages) {
+  //   setApiPage((prevPage: number) => prevPage + 1);
+  //   getMovieDetails(apiPage + 1);
+  //   setCurrentPage(1);
+  // }
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage: any) => prevPage + 1);
+    } else if (currentPage === totalPages) {
+      setApiPage((prevPage: number) => prevPage + 1);
+      getMovieDetails(apiPage + 1);
+      setCurrentPage(1);
+    }
+  };
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage: number) => prevPage - 1);
+    } else if (currentPage === 1 && apiPage !== 1) {
+      setApiPage((prevPage: number) => prevPage - 1);
+      getMovieDetails(apiPage - 1);
+      setCurrentPage(5);
+    }
+  };
+  // useEffect(() => {
+  //   if (currentPage === totalPages) {
+  //     setApiPage((prevPage: number) => prevPage + 1);
+  //     getMovieDetails(apiPage + 1);
+  //     setCurrentPage(1);
+  //   }
+  // }, [currentPage]);
+
+  console.log("apiPage", apiPage);
 
   return (
     <div className="home-container">
@@ -178,35 +215,30 @@ const Home: React.FC = () => {
             <div className="movie-card-group">
               <span
                 className={`material-symbols-outlined ${
-                  currentPage === 1 ? "disabled" : ""
+                  currentPage === 1 && apiPage === 1 ? "disabled" : ""
                 }`}
-                onClick={() => {
-                  if (currentPage > 1) {
-                    setCurrentPage((prevPage: any) => prevPage - 1);
-                  }
-                }}
+                onClick={handlePreviousPage}
               >
                 arrow_back
               </span>
 
               {dataToShow.map((movie: any) => (
                 <MovieCard
+                  id={movie.id}
                   title={movie.title}
                   language={movie.language}
-                  vote={movie.vote}
+                  vote_average={movie.vote_average}
                   poster={movie.poster}
                 />
               ))}
 
               <span
                 className={`material-symbols-outlined ${
-                  currentPage === totalPages ? "disabled" : ""
+                  currentPage === totalPages && allMovies.length === 0
+                    ? "disabled"
+                    : ""
                 }`}
-                onClick={() => {
-                  if (currentPage < totalPages) {
-                    setCurrentPage((prevPage: any) => prevPage + 1);
-                  }
-                }}
+                onClick={handleNextPage}
               >
                 arrow_forward
               </span>
