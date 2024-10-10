@@ -7,17 +7,17 @@ import HeartIcon from "../../Icons/red_love.png";
 interface MovieCardProps {
   id: any;
   title: string;
-  language: string;
+  original_language: string;
   vote_average: number;
-  poster: string; // poster path without base URL (e.g., "/1E5baAaEse26fej7uHcjOgEE2t2.jpg")
+  poster_path: string; // poster path without base URL (e.g., "/1E5baAaEse26fej7uHcjOgEE2t2.jpg")
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({
   id,
   title,
-  language,
+  original_language,
   vote_average,
-  poster,
+  poster_path,
 }) => {
   const [fav, setFav] = useState<any>(false);
 
@@ -27,7 +27,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
   };
 
   const baseUrl = "https://image.tmdb.org/t/p/w300";
-  const fullPosterUrl = `${baseUrl}${poster}`;
+  const fullPosterUrl = `${baseUrl}${poster_path}`;
 
   const goToMovieInfoPage = () => {
     navigate(`/movie-info-page/${id}`);
@@ -52,7 +52,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
           </div>
         </div>
         <div className="movie-card-language-and-like">
-          <div className="movie-card-language">{language}</div>
+          <div className="movie-card-language">{original_language}</div>
           <div className="movie-card-like">
             <img src={HeartIcon} alt="Heart Icon " className="heart-icon" />{" "}
             {vote_average}

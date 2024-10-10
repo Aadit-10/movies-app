@@ -45,7 +45,7 @@ const Home: React.FC = () => {
   };
 
   // Getting all details of movies
-  const getMovieDetails = async (page: any = "") => {
+  const getMovieDetails = async (page: any = "", genreId: string = "") => {
     const options = {
       method: "GET",
       url: "https://api.themoviedb.org/3/discover/movie",
@@ -55,6 +55,7 @@ const Home: React.FC = () => {
         language: "en-US",
         page: page,
         sort_by: "popularity.desc",
+        with_genres: genreId,
       },
       headers: {
         accept: "application/json",
@@ -85,12 +86,13 @@ const Home: React.FC = () => {
           {
             id: movie?.id || "",
             title: movie?.title || "",
-            language: movie?.original_language || "",
+            original_language: movie?.original_language || "",
             vote_average: movie?.vote_average || "",
-            poster: movie?.poster_path || "",
+            poster_path: movie?.poster_path || "",
 
             backdrop_path: movie?.backdrop_path || "",
-            genre_ids: [28, 35, 878],
+            genre_ids: movie?.genre_ids || [],
+            // genre_ids: [28, 35, 878],
             overview: movie?.overview || "",
             popularity: movie?.popularity || "",
             release_date: movie?.release_date || "",
@@ -106,12 +108,12 @@ const Home: React.FC = () => {
             {
               id: movie?.id || "",
               title: movie?.title || "",
-              language: movie?.original_language || "",
+              original_language: movie?.original_language || "",
               vote_average: movie?.vote_average || "",
-              poster: movie?.poster_path || "",
+              poster_path: movie?.poster_path || "",
 
               backdrop_path: movie?.backdrop_path || "",
-              genre_ids: [28, 35, 878],
+              genre_ids: movie?.genre_ids || [],
               overview: movie?.overview || "",
               popularity: movie?.popularity || "",
               release_date: movie?.release_date || "",
@@ -123,7 +125,6 @@ const Home: React.FC = () => {
       }
     });
   };
-  // console.log(currentPage);
 
   const pagination = (noOfItemsPerPage: any, data: any) => {
     const stopIndex = noOfItemsPerPage * currentPage;
@@ -134,40 +135,99 @@ const Home: React.FC = () => {
   const dataToShow = pagination(4, neededMovieDetails);
   const totalPages = Math.ceil(neededMovieDetails.length / 4);
   // console.log("neededMovieDetails", neededMovieDetails);
-
-  // if (currentPage === totalPages) {
-  //   setApiPage((prevPage: number) => prevPage + 1);
-  //   getMovieDetails(apiPage + 1);
-  //   setCurrentPage(1);
-  // }
+  // console.log("activeButton", activeButton);
+  console.log("Genres", allGenres);
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prevPage: any) => prevPage + 1);
-    } else if (currentPage === totalPages) {
-      setApiPage((prevPage: number) => prevPage + 1);
-      getMovieDetails(apiPage + 1);
-      setCurrentPage(1);
+    if (activeButton == "All") {
+      if (currentPage < totalPages) {
+        setCurrentPage((prevPage: any) => prevPage + 1);
+      } else if (currentPage === totalPages) {
+        setApiPage((prevPage: number) => prevPage + 1);
+        getMovieDetails(apiPage + 1);
+        setCurrentPage(1);
+      }
+    } else {
+      if (currentPage < totalPages) {
+        setCurrentPage((prevPage: any) => prevPage + 1);
+      } else if (currentPage === totalPages) {
+        setApiPage((prevPage: number) => prevPage + 1);
+        const genreId = genreIdFinder(activeButton);
+        getMovieDetails(apiPage + 1, genreId);
+        setCurrentPage(1);
+      }
     }
   };
   const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage: number) => prevPage - 1);
-    } else if (currentPage === 1 && apiPage !== 1) {
-      setApiPage((prevPage: number) => prevPage - 1);
-      getMovieDetails(apiPage - 1);
-      setCurrentPage(5);
+    if (activeButton == "All") {
+      if (currentPage > 1) {
+        setCurrentPage((prevPage: number) => prevPage - 1);
+      } else if (currentPage === 1 && apiPage !== 1) {
+        setApiPage((prevPage: number) => prevPage - 1);
+        getMovieDetails(apiPage - 1);
+        setCurrentPage(5);
+      }
+    } else {
+      if (currentPage > 1) {
+        setCurrentPage((prevPage: number) => prevPage - 1);
+      } else if (currentPage === 1 && apiPage !== 1) {
+        setApiPage((prevPage: number) => prevPage - 1);
+        const genreId = genreIdFinder(activeButton);
+        getMovieDetails(apiPage - 1, genreId);
+        setCurrentPage(5);
+      }
     }
   };
-  // useEffect(() => {
-  //   if (currentPage === totalPages) {
-  //     setApiPage((prevPage: number) => prevPage + 1);
-  //     getMovieDetails(apiPage + 1);
-  //     setCurrentPage(1);
-  //   }
-  // }, [currentPage]);
 
-  console.log("apiPage", apiPage);
+  const genreIdFinder = (genreName: string) => {
+    const matchedGenre = allGenres.find(
+      (genre: any) => genre.name === genreName
+    );
+    return matchedGenre ? matchedGenre.id : undefined;
+  };
+  // const genreId = genreIdFinder(activeButton);
+  // console.log("genreId", genreId);
+
+  // const handleNextPage = () => {
+  //   if (activeButton == "All") {
+  //     if (currentPage < totalPages) {
+  //       setCurrentPage((prevPage: any) => prevPage + 1);
+  //     } else if (currentPage === totalPages) {
+  //       setApiPage((prevPage: number) => prevPage + 1);
+  //       getMovieDetails(apiPage + 1);
+  //       setCurrentPage(1);
+  //     }
+  //   } else {
+  //     const genreid = genreIdFinder(activeButton);
+  //     if (currentPage < totalPages) {
+  //       setCurrentPage((prevPage: any) => prevPage + 1);
+  //     } else if (currentPage === totalPages) {
+  //       setApiPage((prevPage: number) => prevPage + 1);
+  //       getMovieDetails(apiPage + 1, genreid);
+  //       setCurrentPage(1);
+  //     }
+  //   }
+  // };
+  // const handlePreviousPage = () => {
+  //   if (activeButton == "All") {
+  //     if (currentPage > 1) {
+  //       setCurrentPage((prevPage: number) => prevPage - 1);
+  //     } else if (currentPage === 1 && apiPage !== 1) {
+  //       setApiPage((prevPage: number) => prevPage - 1);
+  //       getMovieDetails(apiPage - 1);
+  //       setCurrentPage(5);
+  //     }
+  //   } else {
+  //     const genreid = genreIdFinder(activeButton);
+  //     if (currentPage > 1) {
+  //       setCurrentPage((prevPage: number) => prevPage - 1);
+  //     } else if (currentPage === 1 && apiPage !== 1) {
+  //       setApiPage((prevPage: number) => prevPage - 1);
+  //       getMovieDetails(apiPage - 1, genreid);
+  //       setCurrentPage(5);
+  //     }
+  //   }
+  // };
 
   return (
     <div className="home-container">
@@ -193,6 +253,7 @@ const Home: React.FC = () => {
             activeButton={activeButton}
             setActiveButton={setActiveButton}
             setCurrentPage={setCurrentPage}
+            // getMovieDetails={getMovieDetails}
           />
 
           {allGenres.map((genre: any) => (
@@ -203,6 +264,7 @@ const Home: React.FC = () => {
               activeButton={activeButton}
               setActiveButton={setActiveButton}
               setCurrentPage={setCurrentPage}
+              // getMovieDetails={getMovieDetails}
             />
           ))}
         </div>
@@ -226,9 +288,9 @@ const Home: React.FC = () => {
                 <MovieCard
                   id={movie.id}
                   title={movie.title}
-                  language={movie.language}
+                  original_language={movie.original_language}
                   vote_average={movie.vote_average}
-                  poster={movie.poster}
+                  poster_path={movie.poster_path}
                 />
               ))}
 
